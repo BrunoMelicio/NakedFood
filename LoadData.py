@@ -5,8 +5,6 @@ from keras.preprocessing.image import img_to_array
 from sklearn.model_selection import train_test_split
 from pathlib import PureWindowsPath, Path
 
-# new commit
-
 l = 3
 test_size = 0.33
 
