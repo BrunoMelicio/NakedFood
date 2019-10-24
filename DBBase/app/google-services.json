@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "958956459294",
+    "firebase_url": "https://nakedfood-58265.firebaseio.com",
+    "project_id": "nakedfood-58265",
+    "storage_bucket": "nakedfood-58265.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958956459294:android:e6057f94420e7b8ef0e50f",
+        "android_client_info": {
+          "package_name": "com.example.dbbase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958956459294-fuqtj62gagqsg0g8prshrcughiscefv1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dbbase",
+            "certificate_hash": "d466447b0934f38345640e7d39ae8338c8895002"
+          }
+        },
+        {
+          "client_id": "958956459294-afte7h9q4d4ve4619fv7g3tkb17s09s8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc0qyatPRAaynoIzCGe9-tYZ3aC1kVQdk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958956459294-afte7h9q4d4ve4619fv7g3tkb17s09s8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
