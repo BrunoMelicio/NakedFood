@@ -32,7 +32,7 @@ for file in listdir(source_directory):
     destination_directory = '/train'
     if random() < validation_ratio:
         destination_directory = '/test'
-    destination = Path(dataset_home + destination_directory + labels_dictionary[file[0:l]] + file)
+    destination = Path(dataset_home + destination_directory + labels_dictionary[file[0:l]] + '/' + file)
     copyfile(source, destination)
 
 # prepare iterations
