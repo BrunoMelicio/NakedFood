@@ -5,6 +5,8 @@ chmod +x gradlew
 
 ./gradlew assembleDebug
 
+cd app
+
 # Firebase service account decrypt
 openssl aes-256-cbc -K $encrypted_32c4c5da18cf_key -iv $encrypted_32c4c5da18cf_iv -in google-services.json.enc -out google-services.json -d
 
