@@ -27,7 +27,4 @@ gcloud auth activate-service-account --key-file service-account.json
 gcloud firebase test android models list  
 gcloud firebase test android versions list
 
-gcloud firebase test android run \  
-    --type instrumentation \
-    --app app/build/outputs/apk/debug/app-debug.apk \
-    --device model=Pixel2,version=27,locale=en,orientation=portrait
+gcloud firebase test android run --app app/build/outputs/apk/debug/app-debug.apk --device model=Pixel2,version=27,locale=en,orientation=portrait
