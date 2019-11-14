@@ -21,7 +21,7 @@ echo $CLOUD_PROJECT_ID
 gcloud config set project $CLOUD_PROJECT_ID
 
 # Activate cloud credentials
-gcloud auth activate-service-account --key-file /tmp/service-account.json
+gcloud auth activate-service-account --key-file google-services.json
 
 # List available options for logging purpose only (so that we can review available options)
 gcloud firebase test android models list  
