@@ -10,4 +10,5 @@ android:
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
+before_script: chmod +x send_test_to_firebase.sh
 script: ./send_test_to_firebase.sh
