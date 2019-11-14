@@ -17,8 +17,8 @@ source /opt/google-cloud-sdk/path.bash.inc
 
 # Setup and configure the project
 gcloud components update  
-echo $CLOUD_PROJECT_ID  
-gcloud config set project $CLOUD_PROJECT_ID
+#echo $CLOUD_PROJECT_ID  
+gcloud config set project nakedfoodv1
 
 # Activate cloud credentials
 gcloud auth activate-service-account --key-file google-services.json
