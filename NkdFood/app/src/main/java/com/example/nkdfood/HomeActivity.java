@@ -81,6 +81,7 @@ public class HomeActivity extends AppCompatActivity {
     File mediaFile;
     Uri fileUri;
     Bitmap image;
+    Button upload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,15 @@ public class HomeActivity extends AppCompatActivity {
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         btnPredict = findViewById(R.id.btn_predict);
         assert takePictureButton != null;
+
+        upload = findViewById(R.id.btn_upload);
+
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, PredictionActivity.class));
+            }
+        });
 
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,11 +119,11 @@ public class HomeActivity extends AppCompatActivity {
                             "com.example.nkdfood.fileprovider",
                             mediaFile);
                     takePicture();
-                    try {
+                    /*try {
                         image = MediaStore.Images.Media.getBitmap(getContentResolver(), fileUri);
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     takePictureButton.setText("Retake");
                     btnPredict.setVisibility(View.VISIBLE);
                 }
@@ -125,8 +135,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Pass the file uri via intent.
-                Intent predictionIntent = new Intent(HomeActivity.this, PredictionActivity.class);
-                predictionIntent.putExtra("image", image);
+                Intent predictionIntent = new Intent(HomeActivity.this, PredictionCamActivity.class);
+                predictionIntent.putExtra("image", fileUri);
                 startActivity(predictionIntent);
             }
         });
@@ -243,11 +253,11 @@ public class HomeActivity extends AppCompatActivity {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } finally {
+                    } /*finally {
                         if (image != null) {
                             image.close();
                         }
-                    }
+                    }*/
                 }
                 private void save(byte[] bytes) throws IOException {
                     OutputStream output = null;
@@ -384,4 +394,10 @@ public class HomeActivity extends AppCompatActivity {
         stopBackgroundThread();
         super.onPause();
     }
+
+    protected void onDestroy(CameraDevice camera){
+        camera.close();
+        super.onDestroy();
+    }
+
 }

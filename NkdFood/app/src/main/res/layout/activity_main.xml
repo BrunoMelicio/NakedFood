@@ -1,28 +1,36 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffdc88">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:paddingLeft="60dp"
-        android:paddingRight="60dp">
+    android:orientation="vertical"
+    android:background="#ffdc88"
+    android:gravity="center">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            >
+            android:layout_margin="10dp"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/logo"
+                android:id="@+id/mylogo"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                >
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/user"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    />
                 <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
@@ -37,10 +45,7 @@
                     android:textColor="#000"
                     />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#4a5a71"></LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,57 +69,40 @@
                     android:textSize="20dp"
                     android:textColor="#000"/>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#4a5a71"></LinearLayout>
+                android:layout_height="wrap_content"
+                android:paddingLeft="60dp"
+                android:paddingRight="60dp"
+                android:orientation="vertical"
+                android:paddingTop="20dp"
+                >
+                <Button
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#1eac32"
+                    android:text="Login"
+                    android:textSize="20dp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
+                    android:padding="16dp"
+                    android:layout_marginBottom="10dp"
+                    android:letterSpacing="0.2"/>
+                <TextView
+                    android:id="@+id/signup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Don't have an account yet?"
+                    android:textColor="#000"
+                    android:textSize="16dp"
+                    android:letterSpacing="0.1"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="60dp"
-        android:paddingRight="60dp"
-        android:orientation="vertical"
-        android:gravity="bottom"
-        android:layout_marginBottom="20dp">
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#1eac32"
-            android:text="Login"
-            android:textSize="20dp"
-            android:textColor="#fff"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_gravity="bottom"
-            android:padding="16dp"
-            android:layout_marginBottom="30dp"
-            android:letterSpacing="0.2"/>
-        <TextView
-            android:id="@+id/signup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Don't have an account yet? Register"
-            android:textColor="#000"
-            android:textSize="16dp"
-            android:letterSpacing="0.1"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_marginBottom="400dp">
-        <ImageView
-            android:layout_margin="100px"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/logo"
-            />
-    </LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>
 
 
 

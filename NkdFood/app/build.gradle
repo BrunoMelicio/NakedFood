@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    aaptOptions {
+        noCompress "tflite"  // Your model's file extension: "tflite", "lite", etc.
+    }
 }
 
 dependencies {
@@ -30,6 +33,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.google.firebase:firebase-database:19.2.0'
     implementation 'com.google.firebase:firebase-ml-model-interpreter:18.0.0'
+    //implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
