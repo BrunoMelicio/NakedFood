@@ -31,6 +31,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -53,8 +54,7 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = "Naked Food";
-    private Button takePictureButton;
-    private Button btnPredict;
+    private ImageView takePictureButton;
     private TextureView textureView;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity {
     File mediaFile;
     Uri fileUri;
     Bitmap image;
-    Button upload;
+    ImageView upload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +90,8 @@ public class HomeActivity extends AppCompatActivity {
         textureView = (TextureView) findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        takePictureButton = (Button) findViewById(R.id.btn_takepicture);
-        btnPredict = findViewById(R.id.btn_predict);
+        takePictureButton =  findViewById(R.id.btn_takepicture);
+        //btnPredict = findViewById(R.id.btn_predict);
         assert takePictureButton != null;
 
         upload = findViewById(R.id.btn_upload);
@@ -106,10 +106,7 @@ public class HomeActivity extends AppCompatActivity {
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (takePictureButton.getText() == "Retake"){
-                    //DO SOMETHING
-                }
-                else{
+
                     fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date()) + ".jpg";
                     captureDirectory = new File(getFilesDir(), "Captures");
                     if( !captureDirectory.isDirectory() ) captureDirectory.mkdirs();
@@ -124,22 +121,14 @@ public class HomeActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }*/
-                    takePictureButton.setText("Retake");
-                    btnPredict.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
-
-        btnPredict.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 // Pass the file uri via intent.
-                Intent predictionIntent = new Intent(HomeActivity.this, PredictionCamActivity.class);
+                Intent predictionIntent = new Intent(HomeActivity.this, FinalPredictionActivity.class);
                 predictionIntent.putExtra("image", fileUri);
                 startActivity(predictionIntent);
+
             }
         });
+
     }
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override

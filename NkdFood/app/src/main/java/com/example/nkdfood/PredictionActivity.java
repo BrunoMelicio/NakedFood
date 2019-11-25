@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -131,6 +132,8 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
     ArrayList<String> ing = new ArrayList<String>();
     String f;
 
+    TextView foodN;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,12 +142,12 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
         mImageView = findViewById(R.id.image_view);
 
         mTextButton = findViewById(R.id.button_text);
-        mTextButton.setText("Ingredients");
-        mFaceButton = findViewById(R.id.button_face);
         mCloudButton = findViewById(R.id.button_cloud_text);
         mRunCustomModelButton = findViewById(R.id.button_run_custom_model);
 
-        mGraphicOverlay = findViewById(R.id.graphic_overlay);
+        //mGraphicOverlay = findViewById(R.id.graphic_overlay);
+
+        foodN = findViewById(R.id.foodName);
 
         mTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +160,15 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
             @Override
             public void onClick(View v) {
                 runModelInference();
-                f = (String) mCloudButton.getText();
+                //f = (String) mCloudButton.getText();
+                mTextButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mCloudButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PredictionActivity.this, HomeActivity.class));
             }
         });
         Spinner dropdown = findViewById(R.id.spinner);
@@ -286,18 +297,19 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
                                     foodLabel = foodLabel.substring(0, 1).toUpperCase() + foodLabel.substring(1);
 
                                     if (foodLabel != ""){
-                                        mCloudButton.setText(foodLabel);
+                                        //mCloudButton.setText(foodLabel);
+                                        foodN.setText(foodLabel);
                                     }
                                     else{
                                         showToast("Label error");
                                     }
 
 
-                                    mGraphicOverlay.clear();
+                                    /*mGraphicOverlay.clear();
                                     GraphicOverlay.Graphic labelGraphic = new LabelGraphic
                                             (mGraphicOverlay, topLabels);
                                     mGraphicOverlay.add(labelGraphic);
-
+                                    */
 
 
                                     return topLabels;
@@ -378,10 +390,10 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
         }
         return imgData;
     }
-
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
+
 
     // Functions for loading images from app assets.
 
@@ -426,26 +438,36 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
     }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-        mGraphicOverlay.clear();
+        //mGraphicOverlay.clear();
         switch (position) {
             case 0:
                 mSelectedImage = getBitmapFromAsset(this, "img1.jpg");
+                foodN.setText("Guess what ?");
+                mTextButton.setVisibility(View.GONE);
                 break;
             case 1:
                 // Whatever you want to happen when the thrid item gets selected
                 mSelectedImage = getBitmapFromAsset(this, "img2.jpg");
+                foodN.setText("Guess what ?");
+                mTextButton.setVisibility(View.GONE);
                 break;
             case 2:
                 // Whatever you want to happen when the thrid item gets selected
                 mSelectedImage = getBitmapFromAsset(this, "img3.jpg");
+                foodN.setText("Guess what ?");
+                mTextButton.setVisibility(View.GONE);
                 break;
             case 3:
                 // Whatever you want to happen when the thrid item gets selected
                 mSelectedImage = getBitmapFromAsset(this, "img4.jpg");
+                foodN.setText("Guess what ?");
+                mTextButton.setVisibility(View.GONE);
                 break;
             case 4:
                 // Whatever you want to happen when the thrid item gets selected
                 mSelectedImage = getBitmapFromAsset(this, "img5.jpg");
+                foodN.setText("Guess what ?");
+                mTextButton.setVisibility(View.GONE);
                 break;
         }
         if (mSelectedImage != null) {
