@@ -61,3 +61,8 @@ m
 meter
 metre
 inch
+thumb
+sized
+piece
+pinch
+thumb-sized
