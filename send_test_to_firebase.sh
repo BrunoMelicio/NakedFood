@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd NkdFood
+cd AndroidApp
 chmod +x gradlew
 
 ./gradlew assembleDebug
