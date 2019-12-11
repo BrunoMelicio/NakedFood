@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PredictionCamActivity">
+
+    <TextView
+        android:gravity="center"
+        android:textColor="#fff"
+        android:id="@+id/foodName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guess what ?"
+        android:paddingTop="5dp"
+        android:textSize="27dp"
+        android:textAllCaps="true"
+        android:layout_alignParentTop="true"
+        android:background="#FF5B3F"/>
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/foodName"
+        android:adjustViewBounds="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/food"/>
+
+    <LinearLayout
+        android:id="@+id/buttonss"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_view"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="120dp"
+            android:text="Back"
+            android:layout_height="55dp" />
+
+        <Button
+            android:id="@+id/ingBtn"
+            android:text="Ingredients"
+            android:layout_width="120dp"
+            android:layout_height="55dp"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/predictBtn"
+            android:text="Predict"
+            android:layout_width="120dp"
+            android:layout_height="55dp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
