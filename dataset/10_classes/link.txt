@@ -1,0 +1,13 @@
+https://www.kaggle.com/kmader/food41
+
+Classes:
+- Chicken wings
+- Chocolate cake
+- Escargots
+- Hamburger
+- Hot dog
+- Masala Pasta (custom)
+- Lasagna
+- Pizza
+- Spaghetti bolognese
+- Tiramisu
