@@ -55,10 +55,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -88,12 +90,12 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
     /**
      * Name of the model file hosted with Firebase.
      */
-    private static final String HOSTED_MODEL_NAME = "mobilenet";
-    private static final String LOCAL_MODEL_ASSET = "mobilenet.tflite";
+    private static final String HOSTED_MODEL_NAME = "model3_10";
+    private static final String LOCAL_MODEL_ASSET = "model5_10.tflite";
     /**
      * Name of the label file stored in Assets.
      */
-    private static final String LABEL_PATH = "labels2.txt";
+    private static final String LABEL_PATH = "labels.txt";
     /**
      * Number of results to show in the UI.
      */
@@ -128,8 +130,6 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
      */
     private FirebaseModelInputOutputOptions mDataOptions;
 
-    String[] mobileArray = {"Android","IPhone","WindowsMobile","Blackberry",
-            "WebOS","Ubuntu","Windows7","Max OS X"};
 
     String foodLabel = "";
     ArrayList<String> ing = new ArrayList<String>();
@@ -204,7 +204,7 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
 
     private ArrayList<String> getIngredients(){
         final ArrayList<String> ingre = new ArrayList<>();
-        foodDB.child("foods").addListenerForSingleValueEvent(new ValueEventListener() {
+        foodDB.child("food").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(foodLabel != "") {
@@ -238,8 +238,8 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
         try {
             mDataOptions =
                     new FirebaseModelInputOutputOptions.Builder()
-                            .setInputFormat(0, FirebaseModelDataType.BYTE, inputDims)
-                            .setOutputFormat(0, FirebaseModelDataType.BYTE, outputDims)
+                            .setInputFormat(0, FirebaseModelDataType.FLOAT32, inputDims)
+                            .setOutputFormat(0, FirebaseModelDataType.FLOAT32, outputDims)
                             .build();
             FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions
                     .Builder()
@@ -296,8 +296,8 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
                             new Continuation<FirebaseModelOutputs, List<String>>() {
                                 @Override
                                 public List<String> then(Task<FirebaseModelOutputs> task) {
-                                    byte[][] labelProbArray = task.getResult()
-                                            .<byte[][]>getOutput(0);
+                                    float[][] labelProbArray = task.getResult()
+                                            .<float[][]>getOutput(0);
                                     List<String> topLabels = getTopLabels(labelProbArray);
 
                                     foodLabel = topLabels.get(0).split(":")[0];
@@ -305,7 +305,7 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
 
                                     if (foodLabel != ""){
                                         //mCloudButton.setText(foodLabel);
-                                        foodN.setText(foodLabel);
+                                        foodN.setText(topLabels.get(0));
                                     }
                                     else{
                                         showToast("Label error");
@@ -334,11 +334,10 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
     /**
      * Gets the top labels in the results.
      */
-    private synchronized List<String> getTopLabels(byte[][] labelProbArray) {
+    private synchronized List<String> getTopLabels(float[][] labelProbArray) {
         for (int i = 0; i < mLabelList.size(); ++i) {
             sortedLabels.add(
-                    new AbstractMap.SimpleEntry<>(mLabelList.get(i), (labelProbArray[0][i] &
-                            0xff) / 255.0f));
+                    new AbstractMap.SimpleEntry<>(mLabelList.get(i), labelProbArray[0][i]));
             if (sortedLabels.size() > RESULTS_TO_SHOW) {
                 sortedLabels.poll();
             }
@@ -347,8 +346,9 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
         final int size = sortedLabels.size();
         for (int i = 0; i < size; ++i) {
             Map.Entry<String, Float> label = sortedLabels.poll();
-            result.add(label.getKey() + ":" + label.getValue());
+            result.add(label.getKey() + ":" + round(label.getValue()*100, 2) + "%");
         }
+        Collections.reverse(result);
         Log.d(TAG, "labels: " + result.toString());
         return result;
     }
@@ -378,7 +378,7 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
             Bitmap bitmap, int width, int height) {
         ByteBuffer imgData =
                 ByteBuffer.allocateDirect(
-                        DIM_BATCH_SIZE * DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y * DIM_PIXEL_SIZE);
+                        DIM_BATCH_SIZE * DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y * DIM_PIXEL_SIZE * 4);
         imgData.order(ByteOrder.nativeOrder());
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y,
                 true);
@@ -390,9 +390,9 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
         for (int i = 0; i < DIM_IMG_SIZE_X; ++i) {
             for (int j = 0; j < DIM_IMG_SIZE_Y; ++j) {
                 final int val = intValues[pixel++];
-                imgData.put((byte) ((val >> 16) & 0xFF));
-                imgData.put((byte) ((val >> 8) & 0xFF));
-                imgData.put((byte) (val & 0xFF));
+                imgData.putFloat(((val >> 16) & 0xFF)/255.f);
+                imgData.putFloat(((val >> 8) & 0xFF)/255.f);
+                imgData.putFloat((val & 0xFF)/255.f);
             }
         }
         return imgData;
@@ -525,6 +525,12 @@ public class PredictionActivity extends AppCompatActivity implements AdapterView
         }
 
         return bitmap;
+    }
+
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 }
 

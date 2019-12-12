@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PredictionCamActivity">
+    tools:context=".PredictionCamActivity"
+    android:background="#FF5B3F"
+    android:id="@+id/predBody"
+    >
 
     <TextView
         android:gravity="center"
@@ -13,19 +16,68 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Guess what ?"
-        android:paddingTop="5dp"
-        android:textSize="27dp"
+        android:padding="5dp"
+        android:textSize="30dp"
+        android:layout_marginBottom="5dp"
         android:textAllCaps="true"
         android:layout_alignParentTop="true"
-        android:background="#FF5B3F"/>
+        />
+
+    <TextView
+        android:gravity="center"
+        android:textColor="#fff"
+        android:id="@+id/more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="More"
+        android:layout_marginRight="5dp"
+        android:padding="5dp"
+        android:textSize="15dp"
+        android:layout_marginBottom="5dp"
+        android:textAllCaps="true"
+        android:layout_below="@+id/foodName"
+        android:layout_centerHorizontal="true"
+        android:background="#8F0F0F0F"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:gravity="center"
+        android:textColor="#fff"
+        android:id="@+id/foodName2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guess what ?"
+        android:padding="5dp"
+        android:textSize="30dp"
+        android:layout_marginBottom="5dp"
+        android:textAllCaps="true"
+        android:layout_below="@+id/more"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:gravity="center"
+        android:textColor="#fff"
+        android:id="@+id/foodName3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guess what ?"
+        android:padding="5dp"
+        android:textSize="30dp"
+        android:layout_marginBottom="5dp"
+        android:textAllCaps="true"
+        android:layout_below="@+id/foodName2"
+        android:visibility="gone"
+        />
 
     <ImageView
         android:id="@+id/image_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="300dp"
-        android:layout_below="@id/foodName"
-        android:adjustViewBounds="true"
+        android:layout_below="@id/foodName3"
         android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
         android:src="@drawable/food"/>
 
     <LinearLayout

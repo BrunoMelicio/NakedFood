@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -53,11 +52,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
                 if(mFirebaseUser != null){
                     //Toast.makeText(MainActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
+                    //User is already logged in, so start HomeActivity
+                    String em = mFirebaseUser.getEmail();
+                    Intent home = new Intent(MainActivity.this, HomeActivity.class);
+                    home.putExtra("email",em);
+                    startActivity(home);
                 }
                 else{
-                    //Toast.makeText(MainActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
+
                 }
             }
         };

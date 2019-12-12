@@ -23,7 +23,6 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
-import androidx.lifecycle.LifecycleRegistryOwner;
 
 import android.content.pm.PackageManager;
 import android.graphics.Matrix;
@@ -77,6 +76,7 @@ public class HomeActivity extends AppCompatActivity implements LifecycleOwner, P
 
         upload = findViewById(R.id.btn_upload);
 
+        //To predict from images in Gallery
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +170,7 @@ public class HomeActivity extends AppCompatActivity implements LifecycleOwner, P
                     @Override
                     public void onImageSaved(@NonNull File file) {
                         String msg = "Pic captured at " + file.getAbsolutePath();
-                        Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
                         Intent predictionIntent = new Intent(HomeActivity.this, PredictionCamActivity.class);
                         predictionIntent.putExtra("image", file.getAbsolutePath());
                         startActivity(predictionIntent);
@@ -179,7 +179,7 @@ public class HomeActivity extends AppCompatActivity implements LifecycleOwner, P
                     @Override
                     public void onError(@NonNull ImageCapture.UseCaseError useCaseError, @NonNull String message, @Nullable Throwable cause) {
                         String msg = "Pic capture failed : " + message;
-                        Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
                         if(cause != null){
                             cause.printStackTrace();
                         }
@@ -256,13 +256,10 @@ public class HomeActivity extends AppCompatActivity implements LifecycleOwner, P
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.user:
-                // do your code
                 return true;
             case R.id.settings:
-                // do your code
                 return true;
             case R.id.logout:
-                // do your code
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(HomeActivity.this, MainActivity.class));
                 return true;

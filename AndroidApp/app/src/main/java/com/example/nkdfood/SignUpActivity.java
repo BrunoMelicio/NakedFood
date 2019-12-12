@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText emailId, passwordId;
+    EditText emailId, passwordId, confirmPass;
     TextView tvSignIn,nakedfoodtxt;
     Button btnSignUp;
     FirebaseAuth mFirebaseAuth;
@@ -32,6 +32,7 @@ public class SignUpActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         emailId = findViewById(R.id.email);
         passwordId = findViewById(R.id.password);
+        confirmPass = findViewById(R.id.confirmPass);
         btnSignUp = findViewById(R.id.btnRegister);
         tvSignIn = findViewById(R.id.login);
         nakedfoodtxt = findViewById(R.id.nakedfoodtxt);
@@ -44,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = emailId.getText().toString();
                 String pwd = passwordId.getText().toString();
+                String confirmPwd = confirmPass.getText().toString();
                 if(email.isEmpty()){
                     emailId.setError("Please enter email");
                     emailId.requestFocus();
@@ -55,6 +57,11 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 else if(email.isEmpty() && pwd.isEmpty()){
                     Toast.makeText(SignUpActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
+                }
+                else if(!pwd.equals(confirmPwd)){
+                    confirmPass.setError("Passwords don't match");
+                    confirmPass.requestFocus();
+                    //Toast.makeText(SignUpActivity.this, "Passwords don't match", Toast.LENGTH_SHORT).show();
                 }
                 else if(!(email.isEmpty() && pwd.isEmpty())){
                     mFirebaseAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

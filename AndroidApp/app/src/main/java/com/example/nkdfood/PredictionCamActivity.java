@@ -2,36 +2,25 @@ package com.example.nkdfood;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Spinner;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.example.nkdfood.GraphicOverlay.Graphic;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,10 +40,9 @@ import com.google.firebase.ml.custom.FirebaseModelOutputs;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.AbstractMap;
@@ -63,20 +51,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Collections;
 
 public class PredictionCamActivity extends AppCompatActivity {
-
-
-    Button btnLogout;
 
     private FirebaseModelInterpreter mInterpreter;
 
     DatabaseReference foodDB = FirebaseDatabase.getInstance().getReference();
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "PredictionCamActivity";
     private ImageView mImageView;
     private Button getIng;
-    private Button mFaceButton;
     private Button backBtn;
     private Button predictBtn;
     private Bitmap mSelectedImage;
@@ -87,8 +72,8 @@ public class PredictionCamActivity extends AppCompatActivity {
     /**
      * Name of the model file hosted with Firebase.
      */
-    private static final String HOSTED_MODEL_NAME = "model";
-    private static final String LOCAL_MODEL_ASSET = "model.tflite";
+    private static final String HOSTED_MODEL_NAME = "model3_10";
+    private static final String LOCAL_MODEL_ASSET = "model5_10.tflite";
     /**
      * Name of the label file stored in Assets.
      */
@@ -96,14 +81,14 @@ public class PredictionCamActivity extends AppCompatActivity {
     /**
      * Number of results to show in the UI.
      */
-    private static final int RESULTS_TO_SHOW = 1;
+    private static final int RESULTS_TO_SHOW = 3;
     /**
      * Dimensions of inputs.
      */
     private static final int DIM_BATCH_SIZE = 1;
     private static final int DIM_PIXEL_SIZE = 3;
-    private static final int DIM_IMG_SIZE_X = 64;
-    private static final int DIM_IMG_SIZE_Y = 64;
+    private static final int DIM_IMG_SIZE_X = 224;
+    private static final int DIM_IMG_SIZE_Y = 224;
     /**
      * Labels corresponding to the output of the vision model.
      */
@@ -127,14 +112,16 @@ public class PredictionCamActivity extends AppCompatActivity {
      */
     private FirebaseModelInputOutputOptions mDataOptions;
 
-    String[] mobileArray = {"Android","IPhone","WindowsMobile","Blackberry",
-            "WebOS","Ubuntu","Windows7","Max OS X"};
-
     String foodLabel = "";
+    String foodLabel2 = "";
+    String foodLabel3 = "";
+    String selectedLabel = "";
     ArrayList<String> ing = new ArrayList<String>();
     String f;
 
-    TextView foodN;
+    TextView foodN,foodN2,foodN3, more;
+    RelativeLayout rl;
+    int mor = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,19 +134,27 @@ public class PredictionCamActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
         predictBtn = findViewById(R.id.predictBtn);
 
-        //mGraphicOverlay = findViewById(R.id.graphic_overlay);
-
         foodN = findViewById(R.id.foodName);
+        foodN2 = findViewById(R.id.foodName2);
+        foodN3 = findViewById(R.id.foodName3);
+        more = findViewById(R.id.more);
 
-        //LEMBRA DPO KEL IF P XPIA NULL!!!!
-        String path = getIntent().getStringExtra("image");
-        mSelectedImage = BitmapFactory.decodeFile(path);
-        mImageView.setImageBitmap(mSelectedImage);
+        rl = findViewById(R.id.predBody);
+
+        Bundle bundleExtras = getIntent().getExtras();
+        if(bundleExtras != null){
+            String path = bundleExtras.getString("image");
+            mSelectedImage = BitmapFactory.decodeFile(path);
+            mImageView.setImageBitmap(mSelectedImage);
+        }
+        else{
+
+        }
 
         getIng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ing = getIngredients();
+                ing = getIngredients(selectedLabel);
 
             }
         });
@@ -169,6 +164,9 @@ public class PredictionCamActivity extends AppCompatActivity {
                 runModelInference();
                 //f = (String) mCloudButton.getText();
                 getIng.setVisibility(View.VISIBLE);
+                more.setVisibility(View.VISIBLE);
+                foodN.setBackgroundColor(Color.parseColor("#00FF14"));
+                rl.setBackgroundColor(Color.parseColor("#1eac32"));
             }
         });
 
@@ -179,22 +177,68 @@ public class PredictionCamActivity extends AppCompatActivity {
             }
         });
 
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mor == 0){
+                    mor = 1;
+                    more.setText("Less");
+                    foodN2.setVisibility(View.VISIBLE);
+                    foodN3.setVisibility(View.VISIBLE);
+                }
+                else{
+                    mor = 0;
+                    more.setText("More");
+                    foodN2.setVisibility(View.GONE);
+                    foodN3.setVisibility(View.GONE);
+                }
+
+            }
+        });
+        foodN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedLabel = foodLabel;
+                foodN.setBackgroundColor(Color.parseColor("#00FF14"));
+                foodN2.setBackgroundColor(Color.parseColor("#1eac32"));
+                foodN3.setBackgroundColor(Color.parseColor("#1eac32"));
+            }
+        });
+        foodN2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedLabel = foodLabel2;
+                foodN2.setBackgroundColor(Color.parseColor("#00FF14"));
+                foodN.setBackgroundColor(Color.parseColor("#1eac32"));
+                foodN3.setBackgroundColor(Color.parseColor("#1eac32"));
+            }
+        });
+        foodN3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedLabel = foodLabel3;
+                foodN3.setBackgroundColor(Color.parseColor("#00FF14"));
+                foodN2.setBackgroundColor(Color.parseColor("#1eac32"));
+                foodN.setBackgroundColor(Color.parseColor("#1eac32"));
+            }
+        });
+
 
         initCustomModel();
 
     }
 
-    private ArrayList<String> getIngredients(){
+    private ArrayList<String> getIngredients(String label){
         final ArrayList<String> ingre = new ArrayList<>();
         foodDB.child("food").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(foodLabel != "") {
-                    for (DataSnapshot ds : dataSnapshot.child(foodLabel).getChildren()) {
+                if(label != "") {
+                    for (DataSnapshot ds : dataSnapshot.child(label).getChildren()) {
                         String str = ds.getValue(String.class);
                         ingre.add(str);
                     }
-                    Intent ingr = new Intent(PredictionCamActivity.this, IngredientsActivity.class);
+                    Intent ingr = new Intent(PredictionCamActivity.this, IngredientsCamActivity.class);
                     ingr.putStringArrayListExtra("ings", ingre);
                     startActivity(ingr);
 
@@ -282,15 +326,29 @@ public class PredictionCamActivity extends AppCompatActivity {
                                             .<float[][]>getOutput(0);
                                     List<String> topLabels = getTopLabels(labelProbArray);
 
+
                                     foodLabel = topLabels.get(0).split(":")[0];
                                     foodLabel = foodLabel.substring(0, 1).toUpperCase() + foodLabel.substring(1);
+                                    selectedLabel = foodLabel;
+                                    foodLabel2 = topLabels.get(1).split(":")[0];
+                                    foodLabel2 = foodLabel2.substring(0, 1).toUpperCase() + foodLabel2.substring(1);
+                                    foodLabel3 = topLabels.get(2).split(":")[0];
+                                    foodLabel3 = foodLabel3.substring(0, 1).toUpperCase() + foodLabel3.substring(1);
 
-                                    if (foodLabel != ""){
+                                    if (!foodLabel.equals("")){
                                         //mCloudButton.setText(foodLabel);
-                                        foodN.setText(foodLabel);
+                                        foodN.setText(topLabels.get(0));
                                     }
                                     else{
                                         showToast("Label error");
+                                    }
+                                    if (!foodLabel2.equals("")){
+                                        //mCloudButton.setText(foodLabel);
+                                        foodN2.setText(topLabels.get(1));
+                                    }
+                                    if (!foodLabel3.equals("")){
+                                        //mCloudButton.setText(foodLabel);
+                                        foodN3.setText(topLabels.get(2));
                                     }
 
 
@@ -328,8 +386,9 @@ public class PredictionCamActivity extends AppCompatActivity {
         final int size = sortedLabels.size();
         for (int i = 0; i < size; ++i) {
             Map.Entry<String, Float> label = sortedLabels.poll();
-            result.add(label.getKey() + ":" + label.getValue());
+            result.add(label.getKey() + ":" + round(label.getValue()*100, 2) + "%");
         }
+        Collections.reverse(result);
         Log.d(TAG, "labels: " + result.toString());
         return result;
     }
@@ -371,9 +430,9 @@ public class PredictionCamActivity extends AppCompatActivity {
         for (int i = 0; i < DIM_IMG_SIZE_X; ++i) {
             for (int j = 0; j < DIM_IMG_SIZE_Y; ++j) {
                 final int val = intValues[pixel++];
-                imgData.putFloat(((val >> 16) & 0xFF)-128/128.f);
-                imgData.putFloat(((val >> 8) & 0xFF)-128/128.f);
-                imgData.putFloat((val & 0xFF)-128/128.f);
+                imgData.putFloat(((val >> 16) & 0xFF)/255.f);
+                imgData.putFloat(((val >> 8) & 0xFF)/255.f);
+                imgData.putFloat((val & 0xFF)/255.f);
             }
         }
         return imgData;
@@ -425,7 +484,11 @@ public class PredictionCamActivity extends AppCompatActivity {
         return new Pair<>(targetWidth, targetHeight);
     }
 
-
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
+    }
 
 
 }

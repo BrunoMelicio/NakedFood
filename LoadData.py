@@ -16,7 +16,7 @@ def load_dataset():
     photos, labels = list(), list()
     for file in listdir(Path(folder)):
         label = file[0:l]
-        photo = load_img(Path(folder.joinpath(file)), target_size=(200, 200))
+        photo = load_img(Path(folder.joinpath(file)), target_size=(224, 224))
         photo = img_to_array(photo)
         photos.append(photo)
         labels.append(label)

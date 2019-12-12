@@ -12,7 +12,7 @@
         android:gravity="center"
         android:textColor="#fff"
         android:id="@+id/foodName"
-        android:layout_width="match_parent"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:text="Guess what ?"
         android:paddingTop="5dp"
@@ -20,6 +20,7 @@
         android:layout_marginBottom="5dp"
         android:textAllCaps="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
         />
 
     <ImageView

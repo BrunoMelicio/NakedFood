@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="300dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/logo3"
+            android:src="@drawable/logo5"
             android:id="@+id/mylogo" />
         <TextView
             android:layout_width="wrap_content"
